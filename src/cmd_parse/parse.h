@@ -6,11 +6,9 @@
 #define GREP_PARSE_H
 
 namespace grep {
-
-    class parse {
-
-    };
-
+    void parse_arg(char *argv[]);
+    void parse_directory();
+    void parse_file();
 }
 
 #endif //GREP_PARSE_H

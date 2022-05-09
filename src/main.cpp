@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cstdio>
+#include <algorithm>
 #include "./str_search/aho_corasick.h"
 
 int main(int argc, char *argv[]) {
