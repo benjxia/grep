@@ -20,8 +20,10 @@ namespace grep {
 
         /**
          * Default constructor for Aho Corasick Automaton
+         *
+         * @param _case True to be case sensitive, false otherwise
          */
-        aho_corasick();
+        aho_corasick(bool _case);
 
         /**
          * Default destructor for Aho Corasick Automaton
@@ -69,7 +71,7 @@ namespace grep {
 
             const char edge;    // Label of edge going into current node
 
-            /**)
+            /**
              * Default constructor for ahc_node
              *
              * @param p Pointer to parent node
@@ -124,6 +126,8 @@ namespace grep {
         ahc_node *root; // Root of Aho Corasick Automaton
 
         size_t words;   // Number of words in Aho Corasick Automaton
+
+        bool case_s;    // True for case-sensitive, false otherwise
 
     };
 

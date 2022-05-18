@@ -8,7 +8,8 @@
 #include <queue>
 #include "aho_corasick.h"
 
-grep::aho_corasick::aho_corasick() {
+grep::aho_corasick::aho_corasick(bool _case) {
+    case_s = _case;
     if ((root = new ahc_node(nullptr, '\0')) == nullptr) {
         std::cerr << "out of heap space" << std::endl;
         exit(EXIT_FAILURE);
