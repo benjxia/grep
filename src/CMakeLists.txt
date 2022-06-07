@@ -3,4 +3,6 @@ project(grep)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_EXE_LINKER_FLAGS -static)
+
 add_executable(grep main.cpp str_search/aho_corasick.cpp str_search/aho_corasick.h cmd_parse/parse.cpp cmd_parse/parse.h)
