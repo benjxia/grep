@@ -55,10 +55,27 @@ void grep::parse::parse_arg(int argc, char *argv[]) {
 
 void grep::parse::parse_directory(std::string dirname) {
 
+    for (const auto &entry: directory_iterator(dirname)) {
+        if (!entry.is_directory()) {
+            parse_file(entry.path());
+        } else if (rec) {
+            parse_directory(entry.path());
+        }
+    }
 }
 
-void grep::parse::parse_file(std::string filename) {
-    std::ifstream file(filename);
+void grep::parse::parse_directory(std::filesystem::path dirpath) {
+    for (const auto &entry: directory_iterator(dirpath)) {
+        if (!entry.is_directory()) {
+            parse_file(entry.path());
+        } else if (rec) {
+            parse_directory(entry.path());
+        }
+    }
+}
+
+void grep::parse::parse_file(std::filesystem::path filepath) {
+    std::ifstream file(filepath);
     std::string curr_line;
     // Parse each line of file
     while (std::getline(file, curr_line)) {
@@ -67,7 +84,7 @@ void grep::parse::parse_file(std::string filename) {
 
         // If queries found, print matches and current line
         if (found.size() > 0) {
-            std::cout << filename << ": ";
+            std::cout << filepath << ": ";
             for (auto &i : found) {
                 std::cout << i << " ";
             }

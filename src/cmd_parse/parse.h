@@ -6,11 +6,15 @@
 #define GREP_PARSE_H
 
 #include <unistd.h>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <filesystem>
+#include <experimental/filesystem>
+#include <sstream>
 #include "../str_search/aho_corasick.h"
+
+using std::filesystem::directory_iterator;
 
 namespace grep {
     class parse {
@@ -50,11 +54,18 @@ namespace grep {
         void parse_directory(std::string dirname);
 
         /**
+         * Parse specified directory
+         *
+         * @param dirpath path of directory
+         */
+        void parse_directory(std::filesystem::path dirpath);
+
+        /**
          * Parse specified file
          *
          * @param filename Name of file
          */
-        void parse_file(std::string filename);
+        void parse_file(std::filesystem::path filepath);
     private:
         grep::aho_corasick ahc;
     };

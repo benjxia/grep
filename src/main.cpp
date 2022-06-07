@@ -12,8 +12,6 @@ int main(int argc, char *argv[]) {
 
     // Parse program arguments, handles bad calls
     parser.parse_arg(argc, argv);
-
-    parser.parse_file(parser.searchloc);
-
+    parser.parse_directory(parser.searchloc);
     return EXIT_SUCCESS;
 }
