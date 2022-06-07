@@ -20,10 +20,8 @@ namespace grep {
 
         /**
          * Default constructor for Aho Corasick Automaton
-         *
-         * @param _case True to be case sensitive, false otherwise
          */
-        aho_corasick(bool _case);
+        aho_corasick();
 
         /**
          * Default destructor for Aho Corasick Automaton
@@ -34,8 +32,9 @@ namespace grep {
          * Builds Aho Corasick Automaton given stream to file containing all words
          *
          * @param query list of strings to search for
+         * @param _case True to be case sensitive, false otherwise
          */
-        void build_ahc(const std::vector<std::string> &query);
+        void build_ahc(const std::vector<std::string> &query, bool _case);
 
         /**
          * Returns current size of Aho Corasick automaton
@@ -48,8 +47,9 @@ namespace grep {
          * Searches the query string for the entries in the automaton
          *
          * @param query string to search
+         * @return vector of strings found
          */
-        void search(const std::string &query);
+        std::vector<std::string> search(const std::string &query);
 
     private:
 

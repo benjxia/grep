@@ -8,8 +8,8 @@
 #include <queue>
 #include "aho_corasick.h"
 
-grep::aho_corasick::aho_corasick(bool _case) {
-    case_s = _case;
+grep::aho_corasick::aho_corasick() {
+    case_s = false;
     if ((root = new ahc_node(nullptr, '\0')) == nullptr) {
         std::cerr << "out of heap space" << std::endl;
         exit(EXIT_FAILURE);
@@ -27,6 +27,10 @@ void grep::aho_corasick::insert(const std::string &query) {
 
     // For each character in query, traverse to correct node
     for (char c : query) {
+        if (!case_s) {
+            // Handle case sensitivity
+            c = std::tolower(c);
+        }
         // Create new node if needed
         if (!curr->children.count(c)) {
             if ((curr->children[c] = new ahc_node(curr, c)) == nullptr) {
@@ -62,7 +66,8 @@ bool grep::aho_corasick::contains(const std::string &query) {
     return curr->is_word;
 }
 
-void grep::aho_corasick::build_ahc(const std::vector<std::string> &query) {
+void grep::aho_corasick::build_ahc(const std::vector<std::string> &query, bool _case) {
+    case_s = _case;
     // Build MWT for automota
     for (std::string i : query) {
         insert(i);
@@ -135,12 +140,13 @@ size_t grep::aho_corasick::size() {
     return this->words;
 }
 
-void grep::aho_corasick::search(const std::string &query) {
+std::vector<std::string> grep::aho_corasick::search(const std::string &query) {
     ahc_node *curr = root;  // Node pointer for automaton traversal
     std::string output_str; // String represented by word nodes
     unsigned long idx = 0;  // Keep track of current string index
     ahc_node *dict_search;  // Pointer used to traverse dictionary chain
 
+    std::vector<std::string> out; // Output vector
     for (char c : query) {
 
         while (!curr->children.count(c)) {
@@ -156,18 +162,20 @@ void grep::aho_corasick::search(const std::string &query) {
 
         if (curr->is_word) {
             output_str = find_word(curr);
-            std::cout << output_str << std::endl;
+            out.push_back(output_str);
         }
 
         // Traverse dictionary chain
         dict_search = curr->dict_link;
         while (dict_search != nullptr) {
             output_str = find_word(dict_search);
-            std::cout << output_str << std::endl;
+            // TODO: duplicate strings in out
+            out.push_back(output_str);
             dict_search = dict_search->dict_link;
         }
         idx++;
     }
+    return out;
 }
 
 void grep::aho_corasick::clear() {

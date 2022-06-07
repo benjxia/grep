@@ -9,16 +9,11 @@ int main(int argc, char *argv[]) {
     std::vector<std::string> search;// vector of strings to search
     std::vector<std::string> files; // vector of filenames/directories to search
     grep::parse parser;
-    // Protect against incorrect usage
-//    if (argc - opcnt != 3) {
-//        std::cerr << errmsg << std::endl;
-//        return EXIT_FAILURE;
-//    }
 
-    grep::aho_corasick a(true);
+    // Parse program arguments, handles bad calls
+    parser.parse_arg(argc, argv);
 
-    a.build_ahc(search);
-    a.search("gcaa");
+    parser.parse_file(parser.searchloc);
 
     return EXIT_SUCCESS;
 }

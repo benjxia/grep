@@ -5,29 +5,52 @@
 #include "parse.h"
 #include "../str_search/aho_corasick.h"
 
+grep::parse::parse() {
+    opcnt = 0;
+    case_s = false;
+    rec = false;
+}
+
 void grep::parse::parse_arg(int argc, char *argv[]) {
     int opt;   // Helper for parsing arguments
 
     // Parse option flags
-    while ((opt = getopt(argc, argv, "ir")) != -1) {
+    while ((opt = getopt(argc, argv, "CcRr")) != -1) {
         switch (opt) {
-            // -i flag to search ignoring upper/lower case
-            case 'i':
-                opcnt++;
-                case_s = false;
+            // -i flag to be upper/lower case-sensitive
+            case 'C':
+            case 'c':
+                if (!case_s) {
+                    opcnt++;
+                    case_s = true;
+                }
                 break;
-                // -r flag to search last argument recursively
+            // -r flag to search last argument recursively
+            case 'R':
             case 'r':
-                opcnt++;
-                rec = true;
+                if (!rec) {
+                    opcnt++;
+                    rec = true;
+                }
                 break;
         }
     }
 
-    if (argc - opcnt != 3) {
+    // Handle invalid arg count
+    if (argc - opcnt < 3) {
         std::cerr << errmsg << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    // Add queries to query vector
+    for (int i = optind; i < argc - 1; i++) {
+        queries.push_back(argv[i]);
+    }
+
+    // Last argument is search location
+    searchloc = argv[argc - 1];
+
+    ahc.build_ahc(queries, case_s);
 }
 
 void grep::parse::parse_directory(std::string dirname) {
@@ -35,5 +58,20 @@ void grep::parse::parse_directory(std::string dirname) {
 }
 
 void grep::parse::parse_file(std::string filename) {
+    std::ifstream file(filename);
+    std::string curr_line;
+    // Parse each line of file
+    while (std::getline(file, curr_line)) {
+        // Search current line for queries
+        std::vector<std::string> found = ahc.search(curr_line);
 
+        // If queries found, print matches and current line
+        if (found.size() > 0) {
+            std::cout << filename << ": ";
+            for (auto &i : found) {
+                std::cout << i << " ";
+            }
+            std::cout << std::endl << curr_line << std::endl;
+        }
+    }
 }

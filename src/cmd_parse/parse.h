@@ -18,13 +18,16 @@ namespace grep {
         int opcnt;     // counter for opt flags
         bool case_s;   // True if search case-sensitive
         bool rec;      // true if to search specified directory recursively
+        std::vector<std::string> queries;   // All query strings
+        std::string searchloc;              // Location to search for pattern
         const std::string errmsg =
-                "Usage: grep <-i> <-r> <search query> <file or directory>";
+                "Usage: grep <-c> <-r> <search queries> <file or directory>\nExample: grep -c -r \"query1\" \"query2\" dirname";
+
 
         /**
          * constructor
          */
-        parse() = default;
+        parse();
 
         /**
          * destructor
@@ -52,6 +55,8 @@ namespace grep {
          * @param filename Name of file
          */
         void parse_file(std::string filename);
+    private:
+        grep::aho_corasick ahc;
     };
 
 }
