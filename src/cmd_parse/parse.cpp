@@ -54,21 +54,31 @@ void grep::parse::parse_arg(int argc, char *argv[]) {
 }
 
 void grep::parse::parse_directory(std::string dirname) {
-
-    for (const auto &entry: directory_iterator(dirname)) {
-        if (!entry.is_directory()) {
-            parse_file(entry.path());
-        } else if (rec) {
-            parse_directory(entry.path());
+    std::filesystem::path cur(dirname);
+    if (std::filesystem::is_directory(cur)) {
+        // Parse each element in directory
+        for (const auto &entry: std::filesystem::directory_iterator(dirname)) {
+            // Parse file if needed
+            if (!entry.is_directory()) {
+                parse_file(entry.path());
+            } else if (rec) {
+                // Parse directories recursively if needed
+                parse_directory(entry.path());
+            }
         }
+    } else {
+        parse_file(cur);
     }
 }
 
 void grep::parse::parse_directory(std::filesystem::path dirpath) {
-    for (const auto &entry: directory_iterator(dirpath)) {
+    // Parse each element in directory
+    for (const auto &entry: std::filesystem::directory_iterator(dirpath)) {
+        // Parse file if needed
         if (!entry.is_directory()) {
             parse_file(entry.path());
         } else if (rec) {
+            // Parse directories recursively if needed
             parse_directory(entry.path());
         }
     }

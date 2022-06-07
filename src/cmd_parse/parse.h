@@ -14,19 +14,21 @@
 #include <sstream>
 #include "../str_search/aho_corasick.h"
 
-using std::filesystem::directory_iterator;
-
 namespace grep {
     class parse {
     public:
         int opcnt;     // counter for opt flags
+
         bool case_s;   // True if search case-sensitive
+
         bool rec;      // true if to search specified directory recursively
+
         std::vector<std::string> queries;   // All query strings
+
         std::string searchloc;              // Location to search for pattern
+
         const std::string errmsg =
                 "Usage: grep <-c> <-r> <search queries> <file or directory>\nExample: grep -c -r \"query1\" \"query2\" dirname";
-
 
         /**
          * constructor
@@ -67,7 +69,8 @@ namespace grep {
          */
         void parse_file(std::filesystem::path filepath);
     private:
-        grep::aho_corasick ahc;
+
+        grep::aho_corasick ahc; // Aho Corasick Automaton for searching everything
     };
 
 }

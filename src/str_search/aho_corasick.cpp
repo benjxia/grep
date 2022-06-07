@@ -14,7 +14,6 @@ grep::aho_corasick::aho_corasick() {
         std::cerr << "out of heap space" << std::endl;
         exit(EXIT_FAILURE);
     }
-    
     words = 0;
 }
 
@@ -169,7 +168,6 @@ std::vector<std::string> grep::aho_corasick::search(const std::string &query) {
         dict_search = curr->dict_link;
         while (dict_search != nullptr) {
             output_str = find_word(dict_search);
-            // TODO: duplicate strings in out
             out.push_back(output_str);
             dict_search = dict_search->dict_link;
         }
