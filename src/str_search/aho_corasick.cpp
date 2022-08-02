@@ -147,7 +147,9 @@ std::vector<std::string> grep::aho_corasick::search(const std::string &query) {
 
     std::vector<std::string> out; // Output vector
     for (char c : query) {
-
+        if (!case_s) {
+            c = std::tolower(c);
+        }
         while (!curr->children.count(c)) {
             if (curr == root) {
                 break;
